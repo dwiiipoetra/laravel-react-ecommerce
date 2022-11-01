@@ -25,6 +25,7 @@ Route::post('/products/delete',[ProductsController::class, 'destroy'])->middlewa
 
 Route::post('/add-to-carts',[CartController::class, 'store'])->middleware(['auth', 'verified'])->name('add.carts');
 Route::get('/carts',[CartController::class, 'show'])->middleware(['auth', 'verified'])->name('show.carts');
+Route::post('/carts/delete',[CartController::class, 'destroy'])->middleware(['auth', 'verified'])->name('delete.carts');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

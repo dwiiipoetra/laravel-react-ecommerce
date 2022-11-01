@@ -4,6 +4,32 @@ import { Link, Head } from "@inertiajs/inertia-react";
 import { Inertia } from "@inertiajs/inertia";
 
 export default function Carts(props) {
+    // const [cart, setCart] = useState([]);
+    // const handleDecrement = (cartID) => {
+    //     setCart((cart) =>
+    //         cart.map((item) =>
+    //             cartID === item.id
+    //                 ? { ...item, product_qty: item.product_qty - 1 }
+    //                 : item
+    //         )
+    //     );
+    //     console.log(cartID);
+    // };
+
+    // const handleIncrement = (cartID) => {
+    //     setCart((cart) =>
+    //         cart.map((item) =>
+    //             cartID === item.id
+    //                 ? { ...item, product_qty: item.product_qty + 1 }
+    //                 : item
+    //         )
+    //     );
+    // };
+    const removeCartItem = (e, cartID) => {
+        e.preventDefault();
+        console.log(cartID);
+    };
+
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -21,8 +47,8 @@ export default function Carts(props) {
                     <div className="p-6 bg-white border-b border-gray-200">
                         <div className="m-3 text-sm breadcrumbs">
                             <ul>
+                                <li>Home</li>
                                 <li>Carts</li>
-                                <li>List</li>
                             </ul>
                         </div>
                         {props.showCarts.length > 0 ? (
@@ -46,8 +72,8 @@ export default function Carts(props) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {props.showCarts.map((cart, i) => (
-                                            <tr>
+                                        {props.showCarts.map((data, i) => (
+                                            <tr key={i}>
                                                 <th>
                                                     <label>
                                                         <input
@@ -66,38 +92,67 @@ export default function Carts(props) {
                                                         <div>
                                                             <div className="font-bold">
                                                                 {
-                                                                    cart.product
+                                                                    data.product
                                                                         .name
                                                                 }
                                                             </div>
-                                                            {/* <div className="text-sm opacity-50">
-                                                            United States
-                                                        </div> */}
+                                                            <div className="text-sm opacity-50">
+                                                                Stock (
+                                                                {
+                                                                    data.product
+                                                                        .stock
+                                                                }{" "}
+                                                                pcs)
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>{cart.product.price}</td>
+                                                <td>{data.product.price}</td>
                                                 <td>
                                                     <div className="form-control">
                                                         <label className="input-group input-group-sm">
-                                                            <span>-</span>
+                                                            <span
+                                                                onClick={() =>
+                                                                    handleDecrement(
+                                                                        data.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                -
+                                                            </span>
                                                             <div className="my-1 input input-sm">
                                                                 {
-                                                                    cart.product_qty
+                                                                    data.product_qty
                                                                 }
                                                             </div>
-                                                            <span>+</span>
+                                                            <span
+                                                                onClick={() =>
+                                                                    handleIncrement(
+                                                                        data.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                +
+                                                            </span>
                                                         </label>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    {cart.product.price *
-                                                        cart.product_qty}
+                                                    {data.product.price *
+                                                        data.product_qty}
                                                 </td>
                                                 <th>
-                                                    <button className="btn btn-sm btn-outline btn-error">
+                                                    <Link
+                                                        href={route(
+                                                            "delete.carts"
+                                                        )}
+                                                        data={{ id: data.id }}
+                                                        method="post"
+                                                        as="button"
+                                                        className="btn btn-sm btn-outline btn-error"
+                                                    >
                                                         Remove
-                                                    </button>
+                                                    </Link>
                                                 </th>
                                             </tr>
                                         ))}
@@ -117,7 +172,9 @@ export default function Carts(props) {
                         ) : (
                             <div className="w-full text-center my-5">
                                 <p className="text-2xl">
-                                    <strong>Your Shopping Cart is Empty</strong>
+                                    <strong>
+                                        Your Shopping Carts is Empty
+                                    </strong>
                                 </p>
                             </div>
                         )}
